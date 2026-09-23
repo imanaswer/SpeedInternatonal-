@@ -1,10 +1,20 @@
+// Public URL: an explicit setting wins; on Vercel fall back to the deployment's own domain; locally use localhost.
+// Empty strings are treated as unset, which is what an empty env var on Vercel looks like.
+function siteUrl() {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (explicit) return explicit.startsWith("http") ? explicit : `https://${explicit}`;
+  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
+  if (vercel) return `https://${vercel}`;
+  return "http://localhost:3000";
+}
+
 export const site = {
   name: "Speed Shipping International",
   shortName: "Speed",
   tagline: "Freight that keeps its promises.",
   description:
     "International freight forwarding from Oman. Air, ocean and land freight, warehousing, customs clearance and documentation from one accountable team in Muscat.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  url: siteUrl(),
   parent: {
     name: "Fast Shipping & Logistics",
     url: "https://www.fastshippingandlogistics.com/",
