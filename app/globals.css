@@ -1,0 +1,270 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-display: "Zalando Sans";
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-white text-ink font-sans antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    @apply bg-signal text-white;
+  }
+}
+
+@layer components {
+  .container-site {
+    @apply mx-auto w-full max-w-site px-5 sm:px-8 lg:px-10;
+  }
+  /* Monospace uppercase label, the Flexport-style eyebrow. */
+  .eyebrow {
+    @apply font-mono text-[12px] font-normal uppercase tracking-[0.08em] text-muted;
+  }
+  /* Light, tight display type. */
+  .display {
+    @apply font-display font-extralight tracking-[-0.035em] leading-[1.05];
+  }
+  .display-wide {
+    @apply font-display font-light tracking-[-0.03em] leading-none;
+  }
+  /* Every section starts with a hairline and a two-column split: eyebrow left, content right. */
+  .section-rule {
+    @apply border-t border-sand pt-6;
+  }
+  .split {
+    @apply grid gap-8 lg:grid-cols-2 lg:gap-10;
+  }
+
+  .btn {
+    @apply inline-flex h-12 items-center justify-center gap-2.5 px-5 font-mono text-[13px] uppercase tracking-[0.06em] transition-[background-color,color,border-color,transform] duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-white;
+  }
+  .btn:active {
+    transform: scale(0.98);
+  }
+  .btn-lg {
+    @apply h-12 px-6;
+  }
+  .btn-ink {
+    @apply bg-ink text-white hover:bg-graphite;
+  }
+  .btn-signal {
+    @apply bg-signal text-white hover:bg-signal-dark;
+  }
+  .btn-petrol {
+    @apply bg-signal text-white hover:bg-signal-dark;
+  }
+  .btn-white {
+    @apply bg-white text-ink hover:bg-sand;
+  }
+  .btn-outline {
+    @apply border border-ink text-ink hover:bg-ink hover:text-white;
+  }
+  .btn-outline-light {
+    @apply border border-white/60 text-white hover:border-white hover:bg-white hover:text-ink;
+  }
+  .btn-icon {
+    @apply -mr-1 flex h-5 w-5 shrink-0 items-center justify-center transition-transform duration-300 ease-out;
+  }
+
+  .field {
+    @apply h-12 w-full border border-stone bg-white px-3.5 text-[15px] text-ink placeholder:text-ash transition-[border-color,box-shadow] duration-200 ease-out focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/10;
+  }
+  [data-error] .field {
+    @apply border-signal ring-2 ring-signal/10;
+  }
+  .label {
+    @apply font-mono text-[11px] uppercase tracking-[0.08em] text-muted;
+  }
+
+  .card {
+    @apply border border-sand bg-white;
+  }
+  .shell {
+    @apply border border-sand bg-white p-1.5;
+  }
+  .glass {
+    @apply bg-ink text-white;
+  }
+  .lift {
+    @apply transition-[transform,box-shadow] duration-500 ease-out;
+  }
+  .lightbox {
+    @apply m-0 h-full max-h-none w-full max-w-none bg-transparent p-0;
+  }
+  .lightbox::backdrop {
+    background: rgba(11, 26, 36, 0.94);
+    backdrop-filter: blur(12px);
+  }
+  .lightbox[open] {
+    animation: rise 300ms var(--ease-out) both;
+  }
+  /* Fine dot grid used on navy surfaces. */
+  .dot-grid {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+}
+
+@layer utilities {
+  .hero-in > * {
+    animation: rise 900ms var(--ease-out) both;
+  }
+  .hero-in > :nth-child(2) { animation-delay: 80ms; }
+  .hero-in > :nth-child(3) { animation-delay: 160ms; }
+  .hero-in > :nth-child(4) { animation-delay: 240ms; }
+  .hero-in > :nth-child(5) { animation-delay: 320ms; }
+  .hero-in > :nth-child(6) { animation-delay: 400ms; }
+
+  /* Scroll reveals on the native view() timeline. Browsers without it just show the content. */
+  .reveal,
+  .stagger > * {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  @supports (animation-timeline: view()) {
+    .reveal,
+    .stagger > * {
+      animation-name: rise;
+      animation-timing-function: var(--ease-out);
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+    .stagger > :nth-child(2) { animation-range: entry 8% entry 53%; }
+    .stagger > :nth-child(3) { animation-range: entry 16% entry 61%; }
+    .stagger > :nth-child(4) { animation-range: entry 24% entry 69%; }
+    .stagger > :nth-child(5) { animation-range: entry 32% entry 77%; }
+    .stagger > :nth-child(6) { animation-range: entry 40% entry 85%; }
+    /* Hero backdrop video fades in as the pinned hero scrolls (see HeroStage). */
+    .hero-fade {
+      animation: fade-in linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 60vh;
+    }
+  }
+  @supports not (animation-timeline: view()) {
+    .reveal,
+    .stagger > * {
+      opacity: 1;
+      transform: none;
+    }
+    .hero-fade {
+      opacity: 1;
+    }
+  }
+
+  .marquee {
+    animation: marquee 48s linear infinite;
+  }
+  .marquee-reverse {
+    animation: marquee 56s linear infinite reverse;
+  }
+
+  .dash-flow {
+    stroke-dasharray: 6 8;
+    animation: dash 1.4s linear infinite;
+  }
+  .route-dot {
+    display: none;
+  }
+  @supports (offset-path: path("M0 0 L1 1")) {
+    .route-dot {
+      display: block;
+      animation: travel 4.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    }
+  }
+  .route-draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw 900ms var(--ease-out) forwards;
+  }
+  .pin-pulse {
+    animation: pulse 2.4s ease-out infinite;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .lift:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 2px 4px rgba(11, 26, 36, 0.05), 0 28px 64px -20px rgba(11, 26, 36, 0.28);
+    }
+    .btn:hover .btn-icon {
+      transform: translateX(3px);
+    }
+    .marquee:hover,
+    .marquee-reverse:hover {
+      animation-play-state: paused;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-in > *,
+    .reveal,
+    .stagger > *,
+    .hero-fade {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+    .marquee,
+    .marquee-reverse,
+    .route-dot,
+    .dash-flow,
+    .pin-pulse,
+    .animate-ping {
+      animation: none;
+    }
+    .route-draw {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+    .btn:active,
+    .lift:hover {
+      transform: none;
+    }
+  }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+@keyframes dash {
+  to { stroke-dashoffset: -14; }
+}
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(3); opacity: 0; }
+}
+@keyframes travel {
+  0% { offset-distance: 0%; opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
